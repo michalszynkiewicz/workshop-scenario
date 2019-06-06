@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Emails</title>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="/mails.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+
+<div class="container">
+    <h2>Email service</h2>
+    <div class="row grey lighten-3">
+        <div class="col m4 s12">
+            <h4>Working mode</h4>
+            <div class="card">
+                <!-- TODO: make it more obvious which option is selected -->
+                <form action="#">
+                    <div>
+                        <label>
+                            <input type="radio" name="workmode" id="work" onclick="setStatus('WORKING')"/>
+                            <span class="green-text text-accent-4">work properly</span>
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="radio" name="workmode" id="work-sometimes" onclick="setStatus('FIFTY_FIFTY')"/>
+                            <span class="orange-text orange-darken-3">work from time to time</span>
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="radio" name="workmode" id="fail" onclick="setStatus('FAILING')"/>
+                            <span class="red-text text-darken-4">constant failure</span>
+                        </label>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col m7 s12 offset-m1">
+            <h4>Emails sent so far</h4>
+            <table>
+                <thead>
+                <tr>
+                    <th>Recipient</th>
+                    <th>Subject</th>
+                    <th>Content</th>
+                </tr>
+                </thead>
+                <tbody id="emails">
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+<script type="text/javascript">
+    var setStatus = function(state) {
+        fetch("/application-state", {
+            method: 'POST',
+            body: state
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        socket = new WebSocket("ws://" + location.host + "/emails");
+        socket.onopen = function() {
+            connected = true;
+            console.log("Connected to the web socket");
+        };
+
+
+        socket.onmessage = function(message) {
+            var messages = JSON.parse(message.data);
+            console.log("Got message: " + messages);
+            messages.forEach(function(m) {
+                    document.getElementById('emails')
+                        .insertAdjacentHTML('afterbegin', '<tr><td>' + m.address + '</td><td>' + m.subject + '</td><td>' + m.content + '</td>')
+                });
+        };
+
+        fetch('/application-state')
+            .then(response => response.json())
+            .then(function(state) {
+                console.log("state: " + state);
+                switch(state) {
+                    case 'FAILING':
+                        document.getElementById('fail')
+                            .setAttribute('checked', 'true');
+                        console.log("fail checked: ", document.getElementById('fail').getAttribute('checked'));
+                        break;
+                    case 'WORKING':
+                        document.getElementById('work')
+                            .setAttribute('checked', 'true');
+                        break;
+                    case 'FIFTY_FIFTY':
+                        document.getElementById('work-sometimes')
+                            .setAttribute('checked', 'true');
+                        break;
+                    }
+                });
+    });
+
+
+</script>
+</body>
+</html>
