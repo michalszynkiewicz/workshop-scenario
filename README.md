@@ -106,8 +106,8 @@ Response: status code `201`
 Response: status code `200`
 ```
 {
-  "totalDays": 20,
-  "daysAbsent": "5"
+  "childId": 1,
+  "daysAbsent": 5
 }
 ```
 
