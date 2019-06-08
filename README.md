@@ -47,7 +47,6 @@ Response: status code `200`
 Request:
 ```
 {
-  "id": 1,
   "firstname": "Janek",
   "lastname": "Kowalski"
   "parents": [
