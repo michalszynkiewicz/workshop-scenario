@@ -64,6 +64,25 @@ Request:
 }
 ```
 Response: status code 201
+```
+{
+  "id": 1,
+  "firstname": "Janek",
+  "lastname": "Kowalski"
+  "parents": [
+    {
+      "firstname": "Jan",
+      "lastname": "Kowalski",
+      "email": "jan.kowalski@example.com"
+    },
+    {
+      "firstname": "Janina",
+      "lastname": "Kowalska",
+      "email": "janina.kowalska@example.com"
+    }
+  ]
+}
+```
 
 ## Presence/absence service
 
