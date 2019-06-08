@@ -2,6 +2,7 @@
 
 # TODO:
 - prettier formatting for API
+- get rid of api prefixes
 
 
 ## Kids service
