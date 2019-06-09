@@ -127,6 +127,13 @@ max(200, 500 - daysAbsent * 20)
 #### POST /api/trigger
 
 Triggers calculations and sending emails.
+Request:
+```
+{
+  "year": 2010,
+  "month": 12
+}
+```
 
 Response: status code `200`
 
