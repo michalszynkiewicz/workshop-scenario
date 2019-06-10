@@ -19,7 +19,7 @@ import java.util.List;
 public interface AbsenceClient {
 
    @GET
-   @Path("/kid/{kidId}")
+   @Path("/{kidId}")
    List<Absence> getAbsences(@PathParam("kidId") Integer kidId);
 
    @POST

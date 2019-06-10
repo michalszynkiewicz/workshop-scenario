@@ -125,7 +125,7 @@ Request:
 ```
 Response: status code `201`
 
-##### `POST /absences/kid/{kidId}`
+##### `GET /absences/{kidId}` 
 Response:
 ```
 [{
