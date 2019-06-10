@@ -11,7 +11,7 @@ Data stored in memory.
 
 ### API
 
-#### `GET /api/kids`
+#### `GET /kids`
 
 Response: status code `200`
 ```
@@ -43,7 +43,7 @@ Response: status code `200`
 ```
 
 
-#### `POST /api/kids`
+#### `POST /kids`
 
 Request:
 ```
@@ -91,7 +91,7 @@ A service that stores info on whether a child was present or absent on a given d
 
 ### API
 
-#### `POST /api/absence`
+#### `POST /absences`
 Request:
 ```
 {
@@ -100,6 +100,20 @@ Request:
 }
 ```
 Response: status code `201`
+
+#### `POST /absences/kid/{kidId}`
+Response:
+```
+[{
+  "childId": 1,
+  "date": "2019-01-31"
+},{
+  "childId": 1,
+  "date": "2019-01-11"
+},
+]
+```
+Response: status code `200`
 
 #### `GET /api/report/{childId}?month=2019-05`
 
