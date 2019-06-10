@@ -95,7 +95,7 @@ A service that stores info on whether a child was present or absent on a given d
 Request:
 ```
 {
-  "childId": 1,
+  "kidId": 1,
   "date": "2019-01-31"
 }
 ```
@@ -105,22 +105,22 @@ Response: status code `201`
 Response:
 ```
 [{
-  "childId": 1,
+  "kidId": 1,
   "date": "2019-01-31"
 },{
-  "childId": 1,
+  "kidId": 1,
   "date": "2019-01-11"
 },
 ]
 ```
 Response: status code `200`
 
-#### `GET /api/report/{childId}?month=2019-05`
+#### `GET /api/report/{kidId}?month=2019-05`
 
 Response: status code `200`
 ```
 {
-  "childId": 1,
+  "kidId": 1,
   "daysAbsent": 5
 }
 ```
