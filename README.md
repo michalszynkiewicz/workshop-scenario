@@ -139,7 +139,7 @@ Response:
 ```
 Response: status code `200`
 
-##### `GET /api/report/{kidId}?month=2019-05`
+##### `GET /report/{kidId}?month=2019-05`
 
 Response: status code `200`
 ```
@@ -165,7 +165,7 @@ max(200, 500 - daysAbsent * 20)
 
 #### API:
 
-##### POST /api/trigger
+##### POST /trigger
 
 Triggers calculations and sending emails.
 Request:
