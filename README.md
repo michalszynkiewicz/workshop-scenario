@@ -1,17 +1,40 @@
-# Kindergarten
+# Kindergarten system
 
-# TODO:
-- prettier formatting for API
-- get rid of api prefixes
+The task is to implement a system for kindergarten tuition calculation.
 
+The system will comprise of:
+- kids service for storing children data
+- absence service for storing when a child was absent
+- tuition service for calculating the tuition for a given month
+- email service for sending email notifications.
 
-## Kids service
+The tuition service will get a list of kids from kids service.
+For each kid, it will get a list of their absences from absence service, 
+prepare a message with the tuition amount and send it to the kid's parents
+using the email service.
+
+The email service is already provided, you can find it in the `mails` directory in this repository.
+
+You can also run the `com.example.Feeder` app from the `feeder` directory
+to add some data to the kids and absence services.
+
+![Kindergarten system](kindergarten-system.png)
+
+## 1. Implement the system
+All the services store their data in memory.
+
+Use:
+- JAX-RS to expose REST services, 
+- [MicroProfile Rest Client](https://download.eclipse.org/microprofile/microprofile-rest-client-1.3/microprofile-rest-client-1.3.html#_sample_builder_usage) to access REST resources,
+- `application.properties` and `@ConfigProperty` for configuration
+ 
+
+### Kids service
 A CRUD application that stores children data.
-Data stored in memory.
 
-### API
+#### API
 
-#### `GET /kids`
+##### `GET /kids`
 
 Response: status code `200`
 ```
@@ -43,7 +66,7 @@ Response: status code `200`
 ```
 
 
-#### `POST /kids`
+##### `POST /kids`
 
 Request:
 ```
@@ -85,13 +108,14 @@ Response: status code 201
 }
 ```
 
-## Presence/absence service
+### Presence/absence service
 
-A service that stores info on whether a child was present or absent on a given day.
+A service that stores kids' absences.
+It stores and exposes single absences but also provides a monthly report of absences for a child. 
 
-### API
+#### API
 
-#### `POST /absences`
+##### `POST /absences`
 Request:
 ```
 {
@@ -101,7 +125,7 @@ Request:
 ```
 Response: status code `201`
 
-#### `POST /absences/kid/{kidId}`
+##### `POST /absences/kid/{kidId}`
 Response:
 ```
 [{
@@ -110,12 +134,12 @@ Response:
 },{
   "kidId": 1,
   "date": "2019-01-11"
-},
+}
 ]
 ```
 Response: status code `200`
 
-#### `GET /api/report/{kidId}?month=2019-05`
+##### `GET /api/report/{kidId}?month=2019-05`
 
 Response: status code `200`
 ```
@@ -126,19 +150,22 @@ Response: status code `200`
 ```
 
 
-## Payments service
-A service that calculates the amount to pay for the kindergarten and sends an email (via e-mail service) to parents.
+### Tuition service
+For each child, calculates the amount of money to pay for the kindergarten.
+Then sends an email (via e-mail service) to parents.
 
-See below for the email service.
+Please note that the email service is not reliable.
+Use [MicroProfile Fault Tolerance's `@Retry`](https://download.eclipse.org/microprofile/microprofile-fault-tolerance-2.0/microprofile-fault-tolerance-spec.html#_retry_usage)
+to make sure the message is sent. 
 
-The algorithm to calculate the tuition:
+The formula to calculate the tuition:
 ```
 max(200, 500 - daysAbsent * 20)
 ```
 
-### API:
+#### API:
 
-#### POST /api/trigger
+##### POST /api/trigger
 
 Triggers calculations and sending emails.
 Request:
@@ -151,11 +178,11 @@ Request:
 
 Response: status code `200`
 
-## [Already provided] Email service
+### [Already provided] Email service
 
 TODO: describe how it fails.
 
-### API
+#### API
 `POST /emails`
 Request:
 ```
@@ -167,3 +194,9 @@ Request:
 ```
 
 Response: status code: `201`
+
+## 2. Deploy the services to minikube
+See [instructions for installing minikube, build Docker images and using kubectl](https://github.com/michalszynkiewicz/simple-kubernetes-cheat-sheet)
+
+
+
