@@ -22,10 +22,18 @@ public class EmailResource {
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    public Response sendEmail(Email email) {
+      mimicWork();
       if (inflictor.shouldFail()) {
          return Response.serverError().build();
       }
       broadcaster.addEmail(email);
       return Response.status(201).build();
+   }
+
+   private void mimicWork() {
+      try {
+         Thread.sleep(500L);
+      } catch (InterruptedException ignored) {
+      }
    }
 }
