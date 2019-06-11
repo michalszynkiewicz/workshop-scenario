@@ -1,5 +1,7 @@
 package com.example;
 
+import com.example.clients.AbsenceClient;
+import com.example.clients.KidsClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 
 import java.util.Collection;
@@ -24,12 +26,6 @@ public class Feeder {
    private static final KidsClient kidsClient = buildClient(KidsClient.class, kidsUri);
    private static final AbsenceClient absenceClient = buildClient(AbsenceClient.class, absenceUri);
 
-   public static void main(String[] args) {
-      Collection<Integer> kidIds = createKids();
-      registerAbsences(kidIds);
-      System.out.println("Bootstrapping finished.");
-   }
-
    private static <T> T buildClient(Class<T> restInterface, String uri) {
       ResteasyClientBuilder clientBuilder = (ResteasyClientBuilder) ResteasyClientBuilder.newBuilder();
       return clientBuilder.build()
@@ -38,11 +34,10 @@ public class Feeder {
             .build();
    }
 
-   private static void registerAbsence(int year, int month, int day, Integer kidId) {
-      AbsenceClient.Absence absence = new AbsenceClient.Absence();
-      absence.date = String.format("%d-%02d-%02d", year, month, day);
-      absence.kidId = kidId;
-      absenceClient.addAbsence(absence);
+   public static void main(String[] args) {
+      Collection<Integer> kidIds = createKids();
+      registerAbsences(kidIds);
+      System.out.println("Bootstrapping finished.");
    }
 
    private static List<Integer> createKids() {
@@ -91,6 +86,7 @@ public class Feeder {
       mom.firstname = momsName;
       mom.lastname = momsLastName;
       mom.email = momsEmail;
+
       KidsClient.Parent dad = new KidsClient.Parent();
       dad.firstname = dadsName;
       dad.lastname = dadsLastName;
@@ -125,5 +121,12 @@ public class Feeder {
       IntStream.range(1, 29)
             .filter(n -> random.nextDouble() < 0.2)
             .forEach(day -> registerAbsence(year, month, day, kidId));
+   }
+
+   private static void registerAbsence(int year, int month, int day, Integer kidId) {
+      AbsenceClient.Absence absence = new AbsenceClient.Absence();
+      absence.date = String.format("%d-%02d-%02d", year, month, day);
+      absence.kidId = kidId;
+      absenceClient.addAbsence(absence);
    }
 }
