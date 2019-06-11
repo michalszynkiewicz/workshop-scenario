@@ -15,8 +15,6 @@ using the email service.
 
 The email service is already provided, you can find it in the `mails` directory in this repository.
 
-You can also run the `com.example.Feeder` app from the `feeder` directory
-to add some data to the kids and absence services.
 
 ![Kindergarten system](kindergarten-system.png)
 
@@ -27,10 +25,36 @@ Use:
 - JAX-RS to expose REST services, 
 - [MicroProfile Rest Client](https://download.eclipse.org/microprofile/microprofile-rest-client-1.3/microprofile-rest-client-1.3.html#_sample_builder_usage) to access REST resources,
 - `application.properties` and `@ConfigProperty` for configuration
+- `quarkus.http.port` property (in `application.properties`) to specify a non-default port for a service
+    - helpful to run the services together locally
+    
+Important commands:
+- generating a project 
+```
+mvn io.quarkus:quarkus-maven-plugin:999-SNAPSHOT:create
+```
+- listing available extensions: 
+```
+mvn quarkus:list-extensions
+```
+- adding extensions: 
+```
+mvn quarkus:add-extension -Dextensions=<comma-separated list of extensions>
+```
+- starting in the dev mode:
+```
+mvn clean compile quarkus:dev
+```
+- building native binary:
+```
+mvn clean package -Pnative
+```
  
 
 ### Kids service
 A CRUD application that stores children data.
+
+For the local run, expose it on port `8081`.
 
 #### API
 
@@ -113,6 +137,8 @@ Response: status code 201
 A service that stores kids' absences.
 It stores and exposes single absences but also provides a monthly report of absences for a child. 
 
+For the local run, expose it on port `8082`
+
 #### API
 
 ##### `POST /absences`
@@ -180,7 +206,14 @@ Response: status code `200`
 
 ### [Already provided] Email service
 
-TODO: describe how it fails.
+To run the email service, enter the `mails` directory, build the project
+and run:
+```
+java -jar target/mails-1.0-SNAPSHOT.jar
+```
+
+It will expose a web page listing all the messages sent and an API described 
+below at http://localhost:8084
 
 #### API
 `POST /emails`
@@ -195,7 +228,25 @@ Request:
 
 Response: status code: `201`
 
-## 2. Deploy the services to minikube
+## 2. Populate the system
+This repository contains a `feeder` application that lets you easily feed the system with some data.
+
+To run it, either run the `Feeder` class in an IDE or build the app with `mvn clean package` and run with:
+```
+java -jar target/feeder.jar
+```
+You can also run the `com.example.Feeder` app from the `feeder` directory
+to add some data to the kids and absence services.
+
+`feeder` assumes the applications are running locally on the suggested ports.
+If you used different ports or want to feed applications running in minikube, 
+make sure to set `kids.uri` and `absence.uri` system properties to 
+appropriate URLs, e.g.:
+```
+java -Dkids.uri=http://localhost:8181 -Dabsence.uri=http://localhost:8080 -jar target.jar
+``` 
+
+## 3. Deploy the services to minikube
 See [instructions for installing minikube, build Docker images and using kubectl](https://github.com/michalszynkiewicz/simple-kubernetes-cheat-sheet)
 
 
