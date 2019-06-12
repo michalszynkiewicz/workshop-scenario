@@ -61,7 +61,7 @@ For the local run, expose it on port `8081`.
 ##### `GET /kids`
 
 Response: status code `200`
-```
+```JSON
 [
 {
   "id": 1,
@@ -93,7 +93,7 @@ Response: status code `200`
 ##### `POST /kids`
 
 Request:
-```
+```JSON
 {
   "firstname": "Janek",
   "lastname": "Kowalski"
@@ -112,7 +112,7 @@ Request:
 }
 ```
 Response: status code 201
-```
+```JSON
 {
   "id": 1,
   "firstname": "Janek",
@@ -143,7 +143,7 @@ For the local run, expose it on port `8082`
 
 ##### `POST /absences`
 Request:
-```
+```JSON
 {
   "kidId": 1,
   "date": "2019-01-31"
@@ -153,7 +153,7 @@ Response: status code `201`
 
 ##### `GET /absences/{kidId}` 
 Response:
-```
+```JSON
 [{
   "kidId": 1,
   "date": "2019-01-31"
@@ -168,7 +168,7 @@ Response: status code `200`
 ##### `GET /report/{kidId}?month=2019-05`
 
 Response: status code `200`
-```
+```JSON
 {
   "kidId": 1,
   "daysAbsent": 5
@@ -195,9 +195,9 @@ max(200, 500 - daysAbsent * 20)
 
 Triggers calculations and sending emails.
 Request:
-```
+```JSON
 {
-  "year": 2010,
+  "year": 2019,
   "month": 12
 }
 ```
@@ -218,7 +218,7 @@ below at http://localhost:8084
 #### API
 `POST /emails`
 Request:
-```
+```JSON
 {
   "address": "jan.kowalski@example.com",
   "subject": "Your kindergarten tuition for Janek",
@@ -246,7 +246,18 @@ appropriate URLs, e.g.:
 java -Dkids.uri=http://localhost:8181 -Dabsence.uri=http://localhost:8080 -jar target.jar
 ``` 
 
-## 3. Deploy the services to minikube
+## 3. Trigger the calculations and watch the results
+Open your browser on the email service. By default it is exposed at http://localhost:8084
+
+Trigger the calculations, e.g.:
+```
+curl localhost:8080/trigger -d '{"year": 2019, "month": 12}'
+```
+
+If the calculations finished successfully, the mail service page 
+should show the emails with tuition amounts sent to parents.
+
+## 4. Deploy the services to minikube
 See [instructions for installing minikube, build Docker images and using kubectl](https://github.com/michalszynkiewicz/simple-kubernetes-cheat-sheet)
 
 
