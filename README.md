@@ -66,7 +66,7 @@ Response: status code `200`
 {
   "id": 1,
   "firstname": "Janek",
-  "lastname": "Kowalski"
+  "lastname": "Kowalski",
   "parents": [
     {
       "firstname": "Jan",
@@ -82,10 +82,8 @@ Response: status code `200`
 },
 {
   "id": 2,
-  ...
-
-},
-...
+  "firstname": "..."
+}
 ]
 ```
 
@@ -96,7 +94,7 @@ Request:
 ```JSON
 {
   "firstname": "Janek",
-  "lastname": "Kowalski"
+  "lastname": "Kowalski",
   "parents": [
     {
       "firstname": "Jan",
@@ -116,7 +114,7 @@ Response: status code 201
 {
   "id": 1,
   "firstname": "Janek",
-  "lastname": "Kowalski"
+  "lastname": "Kowalski",
   "parents": [
     {
       "firstname": "Jan",
