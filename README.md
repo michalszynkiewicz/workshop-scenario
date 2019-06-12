@@ -15,6 +15,8 @@ using the email service.
 
 The email service is already provided, you can find it in the `mails` directory in this repository.
 
+To query the rest services, you can use `curl` or a browser extension, such as Advanced REST client for Chrome.
+
 
 ![Kindergarten system](kindergarten-system.png)
 
