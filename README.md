@@ -265,10 +265,30 @@ Install minikube and start it.
 Following the instructions linked above, build docker images for the four applications
 and push them to minikube's docker registry.
 
-Use `ConfigMap` to populate the URLs of the services to environment variables.
+Create kubernetes services for each of the applications. 
+Use `NodePort` to be able to access the from outside of the cluster. 
+
+Create a `ConfigMap` as follows::
+
+```yaml
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kindergarten-config
+data:
+  kids.url: 'http://kids:8081'
+  absence.url: 'http://absence:8082'
+  mails.url: 'http://mails:8084'
+```
+
+And add propagate the tuition's environment from it:
+```
+kubectl set env deployment tuition --from=configmap/kindergarten-config
+```
+
+Execute `Feeder` with urls of the services.
 
 Trigger the calculations again, this time in the Kubernetes version, and observe 
 the web page of the kubernetes version of mail service.
-
 
 
