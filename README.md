@@ -256,7 +256,17 @@ If the calculations finished successfully, the mail service page
 should show the emails with tuition amounts sent to parents.
 
 ## 4. Deploy the services to minikube
-See [instructions for installing minikube, build Docker images and using kubectl](https://github.com/michalszynkiewicz/simple-kubernetes-cheat-sheet)
+[Instructions for installing minikube, building Docker images and using kubectl](https://github.com/michalszynkiewicz/simple-kubernetes-cheat-sheet)
+
+Install minikube and start it.
+
+Following the instructions linked above, build docker images for the four applications
+and push them to minikube's docker registry.
+
+Use `ConfigMap` to populate the URLs of the services to environment variables.
+
+Trigger the calculations again, this time in the Kubernetes version, and observe 
+the web page of the kubernetes version of mail service.
 
 
 
