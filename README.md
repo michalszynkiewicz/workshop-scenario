@@ -265,10 +265,13 @@ Install minikube and start it.
 Following the instructions linked above, build docker images for the four applications
 and push them to minikube's docker registry.
 
+Create deployments for each of the applications.
+
 Create kubernetes services for each of the applications. 
 Use `NodePort` to be able to access the from outside of the cluster. 
 
-Create a `ConfigMap` as follows::
+Assuming your services are called `kids`, `absence` and `mails` and are exposing 
+the suggested ports, create a `ConfigMap` as follows:
 
 ```yaml
 kind: ConfigMap
