@@ -23,6 +23,9 @@ To query the rest services, you can use `curl` or a browser extension, such as A
 ## 1. Implement the system
 All the services store their data in memory.
 
+All the services should produce and consume data in the `JSON` format.
+It requires a specific Quarkus extension.
+
 Use:
 - JAX-RS to expose REST services, 
 - [MicroProfile Rest Client](https://download.eclipse.org/microprofile/microprofile-rest-client-1.3/microprofile-rest-client-1.3.html#_sample_builder_usage) to access REST resources,
@@ -254,8 +257,8 @@ Trigger the calculations, e.g.:
 curl localhost:8080/trigger -d '{"year": 2019, "month": 12}'
 ```
 
-If the calculations finished successfully, the mail service page 
-should show the emails with tuition amounts sent to parents.
+If the calculations finish successfully, the mail service page 
+will show the emails sent to parents.
 
 ## 4. Deploy the services to minikube
 [Instructions for installing minikube, building Docker images and using kubectl](https://github.com/michalszynkiewicz/simple-kubernetes-cheat-sheet)
