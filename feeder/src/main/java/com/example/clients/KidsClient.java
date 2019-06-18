@@ -21,15 +21,4 @@ public interface KidsClient {
    @POST
    Kid addKid(Kid kid);
 
-   class Kid {
-      public int id;
-      public String firstname;
-      public String lastname;
-      public List<Parent> parents;
-   }
-   class Parent {
-      public String firstname;
-      public String lastname;
-      public String email;
-   }
 }

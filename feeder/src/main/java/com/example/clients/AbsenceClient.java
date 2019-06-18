@@ -25,8 +25,4 @@ public interface AbsenceClient {
    @POST
    void addAbsence(Absence absence);
 
-   class Absence {
-      public int kidId;
-      public String date;
-   }
 }

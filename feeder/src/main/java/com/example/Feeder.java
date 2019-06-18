@@ -1,7 +1,10 @@
 package com.example;
 
+import com.example.clients.Absence;
 import com.example.clients.AbsenceClient;
+import com.example.clients.Kid;
 import com.example.clients.KidsClient;
+import com.example.clients.Parent;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 
 import java.util.Collection;
@@ -41,7 +44,7 @@ public class Feeder {
    }
 
    private static List<Integer> createKids() {
-      List<KidsClient.Kid> allKids = kidsClient.getAllKids();
+      List<Kid> allKids = kidsClient.getAllKids();
 
       List<Integer> kidIds = allKids.stream().map(k -> k.id).collect(Collectors.toList());
 
@@ -64,7 +67,7 @@ public class Feeder {
       return kidIds;
    }
 
-   private static void addKid(List<KidsClient.Kid> allKids,
+   private static void addKid(List<Kid> allKids,
                               List<Integer> kidIds,
                               String name,
                               String lastName,
@@ -78,23 +81,23 @@ public class Feeder {
          System.out.println(String.format("Skipping adding %s %s. Already exists.", name, lastName));
          return;
       }
-      KidsClient.Kid kid = new KidsClient.Kid();
+      Kid kid = new Kid();
       kid.firstname = name;
       kid.lastname = lastName;
 
-      KidsClient.Parent mom = new KidsClient.Parent();
+      Parent mom = new Parent();
       mom.firstname = momsName;
       mom.lastname = momsLastName;
       mom.email = momsEmail;
 
-      KidsClient.Parent dad = new KidsClient.Parent();
+      Parent dad = new Parent();
       dad.firstname = dadsName;
       dad.lastname = dadsLastName;
       dad.email = dadsEmail;
 
       kid.parents = asList(mom, dad);
 
-      KidsClient.Kid result = kidsClient.addKid(kid);
+      Kid result = kidsClient.addKid(kid);
       kidIds.add(result.id);
    }
 
@@ -103,7 +106,7 @@ public class Feeder {
    }
 
    private static void registerAbsences(Integer kidId) {
-      List<AbsenceClient.Absence> kidsAbsences = absenceClient.getAbsences(kidId);
+      List<Absence> kidsAbsences = absenceClient.getAbsences(kidId);
       if (kidsAbsences.isEmpty()) {
          IntStream.of(2018, 2019, 2020)
                .forEach(
@@ -124,7 +127,7 @@ public class Feeder {
    }
 
    private static void registerAbsence(int year, int month, int day, Integer kidId) {
-      AbsenceClient.Absence absence = new AbsenceClient.Absence();
+      Absence absence = new Absence();
       absence.date = String.format("%d-%02d-%02d", year, month, day);
       absence.kidId = kidId;
       absenceClient.addAbsence(absence);

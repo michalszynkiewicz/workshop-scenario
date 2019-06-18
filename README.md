@@ -115,6 +115,10 @@ Request:
   ]
 }
 ```
+Take a look at the [Kid class](/feeder/src/main/java/com/example/clients/Kid.java)
+to see one possible Java mapping for it.
+
+
 Response: status code 201
 ```JSON
 {
@@ -137,12 +141,12 @@ Response: status code 201
 ```
 
 ### Absence service
-#TODO: reference Absence class from Feeder
-
 A service that stores kids' absences.
 It stores and exposes single absences but also provides a monthly report of absences for a child. 
 
 For the local run, expose it on port `8082`
+
+Tip: you can use `@JsonbDateFormat(value = "yyyy-MM-dd")` to specify a `LocalDate` format.
 
 #### API
 
@@ -154,6 +158,9 @@ Request:
   "date": "2019-01-31"
 }
 ```
+Take a look at the [Absence class](/feeder/src/main/java/com/example/clients/Absence.java)
+to see one possible Java mapping for it.
+
 Response: status code `201`
 
 ##### `GET /absences/{kidId}` 
