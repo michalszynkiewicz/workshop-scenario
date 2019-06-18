@@ -59,12 +59,11 @@ mvn clean package -Dnative -Dnative-image.docker-build=true
 ### Kids service
 A CRUD application that stores children data.
 
-For the local run, expose it on port `8081`.
+For the local run, expose it on port `8180`.
 
 #### API
 
 ##### `GET /kids`
-#TODO: reference Kid and Parent classes from Feeder
 
 Response: status code `200`
 ```JSON
@@ -144,7 +143,7 @@ Response: status code 201
 A service that stores kids' absences.
 It stores and exposes single absences but also provides a monthly report of absences for a child. 
 
-For the local run, expose it on port `8082`
+For the local run, expose it on port `8280`
 
 Tip: you can use `@JsonbDateFormat(value = "yyyy-MM-dd")` to specify a `LocalDate` format.
 
@@ -219,7 +218,7 @@ java -jar target/mails-1.0-SNAPSHOT.jar
 ```
 
 It will expose a web page listing all the messages sent and an API described 
-below at http://localhost:8084
+below at http://localhost:8480
 
 #### API
 `POST /emails`
@@ -252,7 +251,7 @@ java -Dkids.uri=http://localhost:8181 -Dabsence.uri=http://localhost:8080 -jar t
 ``` 
 
 ## 3. Trigger the calculations and watch the results
-Open your browser on the email service. By default it is exposed at http://localhost:8084
+Open your browser on the email service. By default it is exposed at http://localhost:8480
 
 Trigger the calculations, e.g.:
 ```
@@ -325,9 +324,9 @@ apiVersion: v1
 metadata:
   name: kindergarten-config
 data:
-  kids.url: 'http://kids:8081'
-  absence.url: 'http://absence:8082'
-  mails.url: 'http://mails:8084'
+  kids.url: 'http://kids:8180'
+  absence.url: 'http://absence:8280'
+  mails.url: 'http://mails:8480'
 ```
 
 And add propagate the tuition's environment from it:

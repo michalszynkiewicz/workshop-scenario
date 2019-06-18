@@ -23,8 +23,8 @@ import static java.util.Arrays.asList;
 public class Feeder {
    private static final Random random = new Random();
 
-   private static final String kidsUri = System.getProperty("kids.uri", "http://localhost:8081");
-   private static final String absenceUri = System.getProperty("absence.uri", "http://localhost:8082");
+   private static final String kidsUri = System.getProperty("kids.uri", "http://localhost:8180");
+   private static final String absenceUri = System.getProperty("absence.uri", "http://localhost:8280");
 
    private static final KidsClient kidsClient = buildClient(KidsClient.class, kidsUri);
    private static final AbsenceClient absenceClient = buildClient(AbsenceClient.class, absenceUri);
