@@ -297,4 +297,9 @@ Execute `Feeder` with urls of the services.
 Trigger the calculations again, this time in the Kubernetes version, and observe 
 the web page of the kubernetes version of mail service.
 
+## 5. TODO Bonus Tasks (IDEAS)
 
+- Create tests for your rest endpoints
+- Build native images for your microservices using docker
+- MicroProfile OpenAPI
+- MicroProfile Metrics
