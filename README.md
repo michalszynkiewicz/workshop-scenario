@@ -24,7 +24,6 @@ To query the rest services, you can use `curl` or a browser extension, such as A
 All the services store their data in memory.
 
 All the services should produce and consume data in the `JSON` format.
-It requires a specific Quarkus extension.
 
 Use:
 - JAX-RS to expose REST services, 
@@ -32,11 +31,12 @@ Use:
 - `application.properties` and `@ConfigProperty` for configuration
 - `quarkus.http.port` property (in `application.properties`) to specify a non-default port for a service
     - helpful to run the services together locally
+- a `quarkus-resteasy-jsonb` extension for json support in JAX-RS 
     
 Important commands:
 - generating a project 
 ```
-mvn io.quarkus:quarkus-maven-plugin:999-SNAPSHOT:create
+mvn io.quarkus:quarkus-maven-plugin:<quarkus-version>:create
 ```
 - listing available extensions: 
 ```
@@ -50,9 +50,9 @@ mvn quarkus:add-extension -Dextensions=<comma-separated list of extensions>
 ```
 mvn clean compile quarkus:dev
 ```
-- building native binary:
+- building a native binary:
 ```
-mvn clean package -Pnative
+mvn clean package -Dnative -Dnative-image.docker-build=true
 ```
  
 
@@ -64,6 +64,7 @@ For the local run, expose it on port `8081`.
 #### API
 
 ##### `GET /kids`
+#TODO: reference Kid and Parent classes from Feeder
 
 Response: status code `200`
 ```JSON
@@ -135,7 +136,8 @@ Response: status code 201
 }
 ```
 
-### Presence/absence service
+### Absence service
+#TODO: reference Absence class from Feeder
 
 A service that stores kids' absences.
 It stores and exposes single absences but also provides a monthly report of absences for a child. 
@@ -157,7 +159,8 @@ Response: status code `201`
 ##### `GET /absences/{kidId}` 
 Response:
 ```JSON
-[{
+[
+{
   "kidId": 1,
   "date": "2019-01-31"
 },{
@@ -194,16 +197,9 @@ max(200, 500 - daysAbsent * 20)
 
 #### API:
 
-##### POST /trigger
+##### `POST /trigger/2019-05`
 
 Triggers calculations and sending emails.
-Request:
-```JSON
-{
-  "year": 2019,
-  "month": 12
-}
-```
 
 Response: status code `200`
 
@@ -234,19 +230,18 @@ Response: status code: `201`
 ## 2. Populate the system
 This repository contains a `feeder` application that lets you easily feed the system with some data.
 
-To run it, either run the `Feeder` class in an IDE or build the app with `mvn clean package` and run with:
+To run it, either run the `Feeder` class in an IDE or build the app with 
+`mvn clean package` and run the produced shaded jar:
 ```
 java -jar target/feeder.jar
 ```
-You can also run the `com.example.Feeder` app from the `feeder` directory
-to add some data to the kids and absence services.
 
 `feeder` assumes the applications are running locally on the suggested ports.
 If you used different ports or want to feed applications running in minikube, 
 make sure to set `kids.uri` and `absence.uri` system properties to 
 appropriate URLs, e.g.:
 ```
-java -Dkids.uri=http://localhost:8181 -Dabsence.uri=http://localhost:8080 -jar target.jar
+java -Dkids.uri=http://localhost:8181 -Dabsence.uri=http://localhost:8080 -jar target/feeder.jar
 ``` 
 
 ## 3. Trigger the calculations and watch the results
@@ -260,7 +255,48 @@ curl localhost:8080/trigger -d '{"year": 2019, "month": 12}'
 If the calculations finish successfully, the mail service page 
 will show the emails sent to parents.
 
-## 4. Deploy the services to minikube
+## 4. Add monitoring
+### OpenApi
+Expose OpenApi documentation by simply adding `quarkus-smallrye-openapi` extension to 
+each of your applications.
+
+Query the `/openapi` endpoints to see get the information.
+By default the documentation is exposed in the YAML format. If you wish to get it in the JSON
+format, add an `Accept` header set to `application/json`
+
+### Metrics
+Similarly to OpenApi, Metrics can be added to your application by simply adding 
+`quarkus-smallrye-metrics` extension.
+The metrics are exposed on the `/metrics` endpoint, by default in the Prometheus format. 
+If you wish to view them in JSON, add an appropriate header to the request.
+
+Take a special look at the application metrics for the tuition service.
+You should find metrics for `@Retry` there.
+
+### Distributed tracing
+Distributed tracing requires a bit more work to set up.
+First you need to add the `quarkus-smallrye-opentracing` extension.
+Then, configure it in `application.properties`.
+Below are the example settings for emails application. 
+```properties
+quarkus.jaeger.service-name=emails
+quarkus.jaeger.sampler-type=const
+quarkus.jaeger.sampler-param=1
+quarkus.jaeger.endpoint=http://localhost:14268/api/traces
+```
+
+To actually collect the metrics you need to run Jaeger. 
+The simplest way to do it is to use a Docker image:
+```bash
+docker run -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 -p 5775:5775/udp -p 6831:6831/udp -p 6832:6832/udp -p 5778:5778 -p 16686:16686 -p 14268:14268 -p 9411:9411 jaegertracing/all-in-one:latest
+```
+
+If you'd like to run it in Kubernetes, you can use:
+```bash
+kubectl create -f https://raw.githubusercontent.com/jaegertracing/jaeger-kubernetes/master/all-in-one/jaeger-all-in-one-template.yml
+``` 
+
+## 5. Deploy the services to minikube
 [Instructions for installing minikube, building Docker images and using kubectl](https://github.com/michalszynkiewicz/simple-kubernetes-cheat-sheet)
 
 Install minikube and start it.
@@ -297,9 +333,7 @@ Execute `Feeder` with urls of the services.
 Trigger the calculations again, this time in the Kubernetes version, and observe 
 the web page of the kubernetes version of mail service.
 
-## 5. TODO Bonus Tasks (IDEAS)
+## 6. TODO Bonus Tasks (IDEAS)
 
 - Create tests for your rest endpoints
 - Build native images for your microservices using docker
-- MicroProfile OpenAPI
-- MicroProfile Metrics
