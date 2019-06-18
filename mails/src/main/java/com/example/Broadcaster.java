@@ -1,6 +1,8 @@
 package com.example;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnOpen;
@@ -18,9 +20,11 @@ import static java.util.Collections.singletonList;
  * <br>
  * Date: 05/06/2019
  */
-@ServerEndpoint(value = "/emails", encoders = JsonEncoder.class)
+@ServerEndpoint(value = "/emails")
 @ApplicationScoped
 public class Broadcaster {
+
+   private final static Jsonb jsonb = JsonbBuilder.create();
 
    private final List<Email> emails = Collections.synchronizedList(new ArrayList<>());
    private final List<Session> sessions = Collections.synchronizedList(new ArrayList<>());
@@ -28,7 +32,7 @@ public class Broadcaster {
    @OnOpen
    public void onOpen(Session session) {
       sessions.add(session);
-      session.getAsyncRemote().sendObject(emails);
+      session.getAsyncRemote().sendText(jsonb.toJson(emails));
       System.out.println("client connected, the number of clients: " + sessions.size());
    }
 
@@ -53,8 +57,7 @@ public class Broadcaster {
 
    public void addEmail(Email email) {
       this.emails.add(email);
-      sessions.forEach(s -> {
-         s.getAsyncRemote().sendObject(singletonList(email), this::handleFailure);
-      });
+      String data = jsonb.toJson(singletonList(email));
+      sessions.forEach(s -> s.getAsyncRemote().sendObject(data, this::handleFailure));
    }
 }
