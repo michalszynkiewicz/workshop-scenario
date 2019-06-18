@@ -192,6 +192,10 @@ Response: status code `200`
 For each child, calculates the amount of money to pay for the kindergarten.
 Then sends an email (via e-mail service) to parents.
 
+In `application.properties`, set `kids.url`, `absence.url` and `mails.url` to the appropriate URLs.
+Use `@ConfigProperty` to inject them into your code and use them to build a rest client with 
+[MicroProfile Rest Client's RestClientBuilder](https://download.eclipse.org/microprofile/microprofile-rest-client-1.2.1/microprofile-rest-client-1.2.1.html#programmatic_lookup)
+
 Please note that the email service is not reliable.
 Use [MicroProfile Fault Tolerance's `@Retry`](https://download.eclipse.org/microprofile/microprofile-fault-tolerance-2.0/microprofile-fault-tolerance-spec.html#_retry_usage)
 to make sure the message is sent. 
@@ -310,7 +314,7 @@ Install minikube and start it.
 Following the instructions linked above, build docker images for the four applications
 and push them to minikube's docker registry.
 
-Create deployments for each of the applications.
+Create deployments for each of the applications with `kubectl run`
 
 Create kubernetes services for each of the applications. 
 Use `NodePort` to be able to access the from outside of the cluster. 
