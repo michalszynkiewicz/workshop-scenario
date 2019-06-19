@@ -331,19 +331,23 @@ data:
   kids.url: 'http://kids:8180'
   absence.url: 'http://absence:8280'
   mails.url: 'http://mails:8480'
+  # add the following if you have installed jaeger in your minikube  
+  quarkus.jaeger.endpoint: 'http://jaeger-collector:14268/api/traces'
 ```
-
-And add propagate the tuition's environment from it:
+And propagate the tuition's environment from it:
 ```
 kubectl set env deployment tuition --from=configmap/kindergarten-config
 ```
 
-Execute `Feeder` with urls of the services.
+You can also set the environment of the mails service to make it properly report to Jaeger.
+
+Execute `Feeder` with Kubernetes urls of the services.
 
 Trigger the calculations again, this time in the Kubernetes version, and observe 
-the web page of the kubernetes version of mail service.
+the web page of the Kubernetes version of the mail service.
 
-## 6. TODO Bonus Tasks (IDEAS)
+## 6. Bonus Tasks
 
 - Create tests for your rest endpoints
-- Build native images for your microservices using docker
+- List the available extensions. Think of anything you would like to see there. 
+Start working on it with our help.
