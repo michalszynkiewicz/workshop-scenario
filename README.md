@@ -36,7 +36,7 @@ Use:
 Important commands:
 - generating a project 
 ```
-mvn io.quarkus:quarkus-maven-plugin:<quarkus-version>:create
+mvn io.quarkus:quarkus-maven-plugin:0.17.0:create
 ```
 - listing available extensions: 
 ```
